@@ -13,18 +13,18 @@ public class WordCountBatch {
     public static void main(String[] args) throws Exception {
         ExecutionEnvironment environment = ExecutionEnvironment.getExecutionEnvironment();
 
-        final DataSource<String> lineDataSource = environment.readTextFile("D://study//github//flink-example//src//input//words.txt");
+        DataSource<String> lineDataSource = environment.readTextFile("input/words.txt");
 
-        final FlatMapOperator<String, Tuple2<String, Long>> flatMapOperator = lineDataSource.flatMap((String line, Collector<Tuple2<String, Long>> out) -> {
+        FlatMapOperator<String, Tuple2<String, Long>> flatMapOperator = lineDataSource.flatMap((String line, Collector<Tuple2<String, Long>> out) -> {
             String[] words = line.split(" ");
             for (String word : words) {
                 out.collect(Tuple2.of(word, 1L));
             }
         }).returns(Types.TUPLE(Types.STRING, Types.LONG));
 
-        final UnsortedGrouping<Tuple2<String, Long>> groupBy = flatMapOperator.groupBy(0);
+        UnsortedGrouping<Tuple2<String, Long>> groupBy = flatMapOperator.groupBy(0);
 
-        final AggregateOperator<Tuple2<String, Long>> sum = groupBy.sum(1);
+        AggregateOperator<Tuple2<String, Long>> sum = groupBy.sum(1);
 
         sum.print();
     }
