@@ -12,7 +12,7 @@ public class WordCountUnBoundedStream {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        DataStreamSource<String> lineDataStreamSource = env.socketTextStream("localhost", 7777);
+        DataStreamSource<String> lineDataStreamSource = env.socketTextStream("192.180.3.194", 7777);
 
         SingleOutputStreamOperator<Tuple2<String, Long>> operator = lineDataStreamSource.flatMap((String line, Collector<Tuple2<String, Long>> out) -> {
             String[] words = line.split(" ");
